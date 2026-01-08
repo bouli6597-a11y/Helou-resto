@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurant El Helou</title>
+
+<style>
+body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#f5f5f5;color:#222}
+nav{background:#111;color:#ccc;display:flex;justify-content:space-between;align-items:center;padding:15px 30px;position:sticky;top:0;z-index:10}
+nav .logo{font-size:22px;font-weight:bold;color:white}
+nav ul{list-style:none;display:flex;gap:25px;margin:0;padding:0}
+nav ul li{cursor:pointer;position:relative}
+nav ul li.active,nav ul li:hover{color:white}
+nav ul li.active::after{content:'';height:2px;width:100%;background:white;position:absolute;left:0;bottom:-6px}
+.currency{cursor:pointer;border:1px solid #555;padding:6px 12px;border-radius:20px}
+
+section{display:none;max-width:1100px;margin:40px auto;padding:0 20px}
+section.active{display:block}
+
+.hero{background:url('images/hero.jpg') center/cover;height:420px;border-radius:20px;display:flex;align-items:center;justify-content:center;color:white}
+.hero h1{font-size:56px;background:rgba(0,0,0,.55);padding:20px 30px;border-radius:15px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px}
+.card{background:white;border-radius:15px;overflow:hidden;box-shadow:0 6px 15px rgba(0,0,0,.1)}
+.card img{width:100%;height:170px;object-fit:cover}
+.card p{text-align:center;font-weight:600;padding:12px;margin:0}
+
+textarea,select,button{width:100%;padding:12px;margin-top:10px;border-radius:8px;border:1px solid #ccc;font-family:inherit}
+button{background:#111;color:white;border:none;cursor:pointer}
+
+footer{background:#111;color:#ccc;text-align:center;padding:25px;margin-top:50px}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <div class="logo">EL HELOU</div>
+  <ul>
+    <li class="active" onclick="show('home',this)">Home</li>
+    <li onclick="show('menu',this)">Menu</li>
+    <li onclick="show('brand',this)">Brand</li>
+    <li onclick="show('contact',this)">Contact</li>
+    <li onclick="show('feedback',this)">Feedback</li>
+  </ul>
+  <div class="currency" onclick="toggleCurrency()" id="currency">USD $</div>
+</nav>
+
+<section id="home" class="active">
+  <div class="hero">
+    <h1>Restaurant El Helou<br>Tradition & Excellence</h1>
+  </div>
+</section>
+
+<section id="menu">
+  <h2>Entrées</h2>
+  <div class="grid" id="entrees"></div>
+
+  <h2>Plats</h2>
+  <div class="grid" id="plats"></div>
+
+  <h2>Desserts</h2>
+  <div class="grid" id="desserts"></div>
+
+  <h2>Boissons</h2>
+  <div class="grid" id="boissons"></div>
+</section>
+
+<section id="brand">
+  <h2>Notre Histoire</h2>
+  <p>
+    Restaurant El Helou perpétue les recettes libanaises authentiques,
+    transmises de génération en génération, avec passion et savoir-faire. 
+    by chef helou
+  </p>
+</section>
+
+<section id="contact">
+  <h2>Contact</h2>
+  <p>📍 Beyrouth, Liban<br>☎ 01 234 567<br>✉ Yves@elhelou.com</p>
+</section>
+
+<section id="feedback">
+  <h2>Votre Avis</h2>
+  <textarea placeholder="Écrivez votre message ici..."></textarea>
+  <select>
+    <option>Suggestion</option>
+    <option>Amélioration</option>
+    <option>Compliment</option>
+  </select>
+  <button onclick="sendFeedback()">Envoyer</button>
+</section>
+
+<footer>© 2026 Restaurant El Helou</footer>
+
+<script>
+let currency='USD';
+const rate=89000;
+
+const items={
+  entrees:[
+    ['Houmous',5,'images/houmous.jpg'],
+    ['Taboulé',6,'images/taboule.jpg'],
+    ['Fattouche',6,'images/fattouche.jpg'],
+    ['Kibbeh Nayeh',8,'images/kibbeh.jpg']
+  ],
+  plats:[
+    ['Chawarma Poulet',10,'images/chawarma_poulet.jpg'],
+    ['Chawarma Viande',11,'images/chawarma_viande.jpg'],
+    ['Kafta',11,'images/kafta.jpg'],
+    ['Mixed Grill',14,'images/mixed_grill.jpg']
+  ],
+  desserts:[
+    ['Baklava',4,'images/baklava.jpg'],
+    ['Knafeh',6,'images/knafeh.jpg'],
+    ['Mouhalabieh',4,'images/mouhalabieh.jpg']
+  ],
+  boissons:[
+    ['Jus Frais',3,'images/jus.jpg'],
+    ['Café Libanais',2,'images/cafe.jpg'],
+    ['Thé',2,'images/the.jpg']
+  ]
+};
+
+function render(){
+  for(let cat in items){
+    const div=document.getElementById(cat);
+    div.innerHTML='';
+    items[cat].forEach(i=>{
+      const price=currency==='USD'?i[1]+' $':(i[1]*rate).toLocaleString()+' L.L';
+      div.innerHTML+=`
+      <div class="card">
+        <img src="${i[2]}" alt="${i[0]}">
+        <p>${i[0]} — ${price}</p>
+      </div>`;
+    });
+  }
+}
+render();
+
+function toggleCurrency(){
+  currency=currency==='USD'?'LBP':'USD';
+  document.getElementById('currency').innerText=currency==='USD'?'USD $':'LBP ل.ل';
+  render();
+}
+
+function show(id,el){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('nav li').forEach(l=>l.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function sendFeedback(){
+  alert("Merci pour votre message 🙏");
+}
+</script>
+
+</body>
+</html>
